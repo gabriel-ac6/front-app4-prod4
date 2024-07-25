@@ -1,5 +1,5 @@
 
-![Ionic Logo](images/logo.png)
+![Ionic Logo](img/logo.png)
 
 ---
 
