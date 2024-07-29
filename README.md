@@ -3,6 +3,10 @@
 
 ---
 
+[Assista o vídeo](video-execucao-teste/Screencast from 2024-07-29 16-35-59.webm)
+
+---
+
 # Inicialização do Aplicativo Ionic
 
 ## Visão Geral
