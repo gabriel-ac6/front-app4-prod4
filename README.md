@@ -3,7 +3,7 @@
 
 ---
 
-[![Assista ao vídeo](https://img.shields.io/badge/Assista%20ao%20vídeo-YouTube-red?style=for-the-badge&logo=youtube)](https://youtu.be/Ej1I5ugwAGk)
+https://youtu.be/Ej1I5ugwAGk
 
 ---
 
