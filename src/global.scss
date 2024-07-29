@@ -35,3 +35,51 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+.spacing-label {
+    margin-bottom: 20px; /* Espaço abaixo do label */
+}
+  
+.spacing-input {
+    margin-top: 20px; /* Espaço acima do input */
+}
+  
+body.dark {
+    --ion-background-color: #121212;
+    --ion-text-color: #fff;
+    --ion-color-primary: #3880ff;
+    --ion-color-secondary: #0cd1e8;
+    --ion-color-tertiary: #7044ff;
+    --ion-color-success: #10dc60;
+    --ion-color-warning: #ffce00;
+    --ion-color-danger: #f04141;
+    --ion-color-light: white;
+    --ion-color-medium: #989aa2;
+    --ion-color-dark: #222428;
+    --ion-toolbar-background: #1f1f1f;
+
+
+}
+
+body.dark ion-header {
+    --background: #1f1f1f;
+}
+
+body.dark ion-tab-bar {
+  --background: #1f1f1f;
+}
+
+body.dark ion-tab-button {
+    --background: #1f1f1f;
+}
+
+/* Estilo para ion-card no modo escuro */
+body.dark ion-card {
+    --background: #1f1f1f;
+    --ion-background-color: #1f1f1f;
+    color: white;
+}
+
+body.dark ion-card-title {
+  color: white;
+}

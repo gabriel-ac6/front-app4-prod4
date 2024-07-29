@@ -1,0 +1,44 @@
+ /* Estilo personalizado para os cards */
+.custom-card {
+    
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1 );
+    
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 80%;
+  }
+  
+  .custom-card ion-card-header {
+    background-color: #1461e5;
+    color: white;
+    border-radius: 8px 8px 0 0;
+  }
+  
+  .custom-card ion-card-title {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .custom-card ion-card-content {
+    padding: 16px;
+  }
+  
+  .custom-card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 10px;
+  }
+  
+  .progress-bar {
+    height: 1px;
+    background-color: #1461e5; /* Cor verde para a barra de progresso */
+    transition: width 0.1s;
+    margin-top: 10px; /* Espaço entre a barra de progresso e o conteúdo acima */
+  }
+
+  #button_send{
+    background-color: black;
+  }

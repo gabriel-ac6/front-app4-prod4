@@ -1,17 +1,333 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Tab 2
+    <ion-title style="text-align: center;">
+      Photo Controll
     </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleTheme()">
+        <ion-icon [name]="isDarkTheme ? 'sunny-outline' : 'moon-outline'"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="start">
+      <span style=" background-color: black; width: 63px; border-radius: 4pt;">
+        <ion-img
+          src="../../assets/logo-sualtech.png" 
+          alt="The Wisconsin State Capitol building in Madison, WI at night">
+        </ion-img>
+        </span>
+       
+      
+    </ion-buttons>
+    
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+<ion-content>
+<div style=" justify-content: center; align-items: center; height: 100%; background-image: url('../assets/teste4.png'); background-size: 320px 220px; background-repeat: repeat; background-position: center;">
+  <div *ngIf="!showInstructions">
+    <div style="display: flex; justify-content: center; align-items: center; height: 100%; position: relative;">
+      <ion-card>
+        <ion-card-header style="background-color: black;">
+          <ion-card-title style="text-align: center; color: white;">Tire sua foto</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <br><br>
+          <form style="display: flex; flex-direction: column; align-items: center;">
+            <div id="cameraPreview" style="position: relative; width: 100%; height: 100%;">
+              <video #videoElement *ngIf="!isPhotoTaken" autoplay playsinline style="width: 100%; height: 100%;"></video>
+              <canvas #canvasElement style="display: none;"></canvas>
+              <!-- Silhueta visível apenas quando a foto não foi tirada -->
+              <img src="../../assets/icon/user.png" alt="Silhueta" *ngIf="!isPhotoTaken" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 87%; height: auto; pointer-events: none;">
+            </div>
+  
+            <div *ngIf="!isPhotoTaken" style="display: flex; gap: 10px; margin-top: 10px;">
+              <ion-button expand="block" (click)="toggleVisibility()" style="color: white; width: 190px;">
+                Voltar para as Instruções<span style="width: 10px;"></span><ion-icon name="arrow-back-outline"></ion-icon>
+              </ion-button>
+              <ion-button expand="block" (click)="takePicture()" style="color: white; width: 190px;" id="capture">
+                Tirar Foto<span style="width: 10px;"></span><ion-icon name="camera"></ion-icon>
+              </ion-button>
+            </div>
+  
+            <div *ngIf="photo && isPhotoTaken" style="display: flex; flex-direction: column; align-items: center;">
+              <!-- Silhueta invisível após a foto ser tirada -->
+              <img [src]="photo" style="margin-top: 10px; max-width: 100%; height: auto;">
+              <div style="display: flex; gap: 10px; margin-top: 10px;">
+                <ion-button expand="block" (click)="sendPhoto()" style="color: white; width: 190px;" id="send">
+                  Enviar Foto<span style="width: 10px;"></span><ion-icon name="checkmark-done-outline"></ion-icon>
+                </ion-button>
+                <ion-button expand="block" (click)="cancelPhoto()" style="color: white; width: 190px;">
+                  Cancelar<span style="width: 10px;"></span><ion-icon name="close-outline"></ion-icon>
+                </ion-button>
+              </div>
+            </div>
+  
+            <br>
+          </form>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </div>
+  
+  
+  <div *ngIf="showInstructions">
+    <div style=" display: flex; justify-content: center; align-items: center; height: auto;">
+      <swiper-content style="width: 100%; max-width: 800px;">
+        <swiper-container 
+        #swiperEx
+        initial-slide="0"
+        (slidechange)="onSlideChange()"
+        [pagination]="true"
+        allowTouchMove="false"
+        [allowSlidePrev]="!isPrevButtonDisabled"
+        [allowSlideNext]="!isNextButtonDisabled"
+        [allow-touch-move]="!isSlideDraggingDisabled">
+
+          <swiper-slide>
+            <ion-card class="custom-card" style="margin-left: 10%;">
+              <ion-card-header>
+                <ion-card-title style="text-align: center; color: white;">Manter rosto centralizado</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <div>
+                <!-- GIF aleatório da internet -->
+                <br><br>
+                <span style="display: flex; justify-content: center; align-items: center;">
+                  <img src="../../assets/icon/face-scan.gif" width="40%" alt="GIF Aleatório">
+                </span>
+                <!-- Conteúdo da instrução -->
+                <br><br>
+                <span style="display: flex; flex-direction: column; align-items: center;">
+                  <h3 style="font-weight: bold; font-size: 14pt; text-align: center;">Comportamento correto para o rosto:</h3>
+                <ul>
+
+                  <li style="font-weight: bold;">Rosto centralizado, olhando para câmera</li>
+                  <li style="font-weight: bold;">Cabeça reta e alinhada</li>
+
+                </ul>
+              </span>
+              <br>
+              </div>
+              <div style="text-align: center;">
+                <ion-button (click)="onSlidePrev()" [disabled]="isPrevButtonDisabled" id="prevButton" style="color: gray; width: 100px;"> Voltar</ion-button>
+                <ion-button (click)="onSlideNext()" id="face" [disabled]="isNextButtonDisabled" style="color: white; width: 130px;"> Próximo</ion-button>
+                <br><br>
+              </div>
+              <div class="progress-bar" [style.width]="progressBarWidth"></div>
+              </ion-card-content>
+            </ion-card>
+          </swiper-slide>
+
+          <swiper-slide>
+            <ion-card class="custom-card" style="margin-left: 10%;">
+              <ion-card-header>
+                <ion-card-title style="text-align: center; color: white;">Procurar uma parede branca</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <br><br>
+                <span style="display: flex; justify-content: center; align-items: center;">
+              
+                  <img src="../../assets/icon/wall.gif" width="40%" alt="GIF Aleatório">
+                </span>
+                <!-- Conteúdo da instrução -->
+                <br><br>
+                <span style="display: flex; flex-direction: column; align-items: center;">
+                  <h3 style="font-weight: bold; font-size: 14pt; text-align: center;">O correto para o fundo da imagem:</h3>
+                  <ul>
+
+                    <li style="font-weight: bold;">Deve ser em um lugar claro</li>
+                    <li style="font-weight: bold;">Estar em um fundo branco</li>
+                  </ul>
+                </span>   
+                <br>
+                <div style="text-align: center;">
+                  <ion-button (click)="onSlidePrev()" [disabled]="isPrevButtonDisabled" style="color: white; width: 130px;"> Voltar</ion-button>
+                  <ion-button (click)="onSlideNext()" id="wall" [disabled]="isNextButtonDisabled" style="color: white; width: 130px;"> Próximo </ion-button>
+                  <br><br>
+                </div>
+                <div class="progress-bar" [style.width]="progressBarWidth"></div>
+              </ion-card-content>
+            </ion-card>
+          </swiper-slide>       
+          
+          <swiper-slide>
+            <ion-card class="custom-card" style="margin-left: 10%;">
+              <ion-card-header>
+                <ion-card-title style="text-align: center; color: white;">Esteja em um ambiente claro</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <br><br>
+                <span style="display: flex; justify-content: center; align-items: center;">
+                  <img src="../../assets/icon/lampada-de-mesa.gif" width="40%" alt="GIF Aleatório">
+                </span>
+                <!-- Conteúdo da instrução -->
+                <br><br>
+                <span style="display: flex; flex-direction: column; align-items: center;">
+                  <h3 style="font-weight: bold; font-size: 14pt; text-align: center;">O correto para a iluminação da imagem:</h3>
+                  <ul>
+
+                    <li style="font-weight: bold;">O fundo deve ser iluminado</li>
+                    <li style="font-weight: bold;">Não ter sombras no rosto</li>
+                  </ul>
+                </span>
+                <br>
+                <div style="text-align: center;">
+                  <ion-button (click)="onSlidePrev()" [disabled]="isPrevButtonDisabled" style="color: white; width: 130px;"> Voltar</ion-button>
+                  <ion-button (click)="onSlideNext()" id="lampada" [disabled]="isNextButtonDisabled" style="color: white; width: 130px;"> Próximo </ion-button>
+                  <br><br>
+                </div>
+                <div class="progress-bar" [style.width]="progressBarWidth"></div>
+              </ion-card-content>
+            </ion-card>
+          </swiper-slide>  
+
+          <swiper-slide>
+            <ion-card class="custom-card" style="margin-left: 10%;">
+              <ion-card-header>
+                <ion-card-title style="text-align: center; color: white;">Não ter mais de um rosto</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <!-- GIF aleatório da internet -->
+                <br>
+                <span style="display: flex; justify-content: center; align-items: center;">
+                  <img src="../../assets/icon/exclude.gif" width="40%" alt="GIF Aleatório">
+                </span>
+                <!-- Conteúdo da instrução -->
+               <!-- Conteúdo da instrução -->
+               <br><br>
+               <span style="display: flex; flex-direction: column; align-items: center;">
+                <h3 style="font-weight: bold; font-size: 14pt; text-align: center;">Comportamento correto para o usuário:</h3>
+                <ul>
+
+                  <li style="font-weight: bold;">Não ter mais de um rosto</li>
+                  <li style="font-weight: bold;">Fundo sem desenhos de rosto</li>
+
+                </ul>
+              </span>
+              <br>
+              <div style="text-align: center;">
+                <ion-button (click)="onSlidePrev()" [disabled]="isPrevButtonDisabled" style="color: white; width: 130px;"> Voltar</ion-button>
+                <ion-button (click)="onSlideNext()" id="exclude" [disabled]="isNextButtonDisabled" style="color: white; width: 130px;"> Próximo </ion-button>
+                <br>
+              </div>
+              <br>
+              <div class="progress-bar" [style.width]="progressBarWidth"></div>
+              
+              </ion-card-content>
+            </ion-card>
+          </swiper-slide>
+          <swiper-slide>
+            <ion-card class="custom-card" style="margin-left: 10%;">
+              <ion-card-header>
+                <ion-card-title style="text-align: center; color: white;">Prosseguir para tirar foto</ion-card-title>
+              </ion-card-header>
+              <ion-card-content>
+                <!-- GIF aleatório da internet -->
+                <span style="display: flex; justify-content: center; align-items: center;">
+                  <img src="../../assets/icon/task.gif" width="42%" alt="GIF Aleatório">
+                </span>
+                <!-- Conteúdo da instrução -->
+                <br>
+                <span style="display: flex; flex-direction: column; align-items: center;">
+                  <h3 style="font-weight: bold; font-size: 14pt; text-align: center;">Resumindo as instruções para a foto:</h3>
+                  <ul>
+                    <li style="font-weight: bold;">Rosto centralizado</li>
+                    <li style="font-weight: bold;">Cabeça reta e alinhada</li>
+                    <li style="font-weight: bold;">O fundo branco e iluminado</li>
+                    <li style="font-weight: bold;">Um rosto apenas</li>
+                    <br>
+                    <input type="checkbox" (change)="onCheckboxChange($event)" required> Aceitar termos de uso
+                  </ul>
+                </span>
+                <span style="display: flex; justify-content: center; align-items: center;">
+                  <ion-button (click)="onSlidePrev()" style="color: white; width: 130px;"> Voltar</ion-button>
+                  <ion-button (click)="toggleVisibility()"  id="finalizar" [disabled]="!isTermsAccepted" style="color: white; width: 130px;">
+                    Finalizar <span style="width: 10px;"></span><ion-icon name="eye"></ion-icon>
+                  </ion-button>
+                </span>
+                <br>
+              </ion-card-content>
+            </ion-card>
+          </swiper-slide>
+          
+        </swiper-container>
+      </swiper-content>
+    </div>
+  </div>
+</div>
+</ion-content>
+
+<!-- Modal da Câmera -->
+<ion-modal [(isOpen)]="isCameraModalOpen">
+  <ion-header>
     <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
+      <ion-title>Captura de Foto</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="closeCameraModal()">Fechar</ion-button>
+      </ion-buttons>
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
-</ion-content>
+  <ion-content>
+    <div class="video-container">
+      <video #modalVideoElement autoplay playsinline></video>
+      <img src="../../assets/icon/quadro.png" class="overlay-image">
+    </div>
+    <canvas #modalCanvasElement style="display: none;"></canvas>
+    <ion-button expand="full" (click)="capturePhoto()" id="capture">Tirar Foto <span style="width: 10px;"></span><ion-icon name="camera"></ion-icon></ion-button>
+    <div *ngIf="photoUrl">
+      <ion-button expand="full" style="color: white;" (click)="sendPhoto()" id="send">Enviar Foto <span style="width: 10px;"></span><ion-icon name="checkmark-done-outline"></ion-icon></ion-button>
+    </div>
+  </ion-content>
+</ion-modal>
+
+<style>
+  .video-container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-top: 56.25%; /* Aspect ratio 16:9 */
+    background-color: black;
+  }
+
+  .video-container video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .overlay-image {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    opacity: 0.7;
+  }
+
+  ion-modal {
+    --height: 80%;
+    --width: 70%;
+  }
+  /* Adicione isso ao seu arquivo CSS/SCSS global ou do componente */
+.button-container {
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center; /* Centraliza verticalmente */
+  gap: 10px; /* Espaçamento entre os botões */
+  margin-top: 10px; /* Espaço acima dos botões */
+}
+
+.button-container ion-button {
+  width: 150px; /* Largura dos botões */
+}
+
+</style>
+
+
+
+
