@@ -3,7 +3,7 @@
 
 ---
 
-[Assista o vídeo](video-execucao-teste/Screencast from 2024-07-29 16-35-59.webm)
+[![Assista ao vídeo](https://img.shields.io/badge/Assista%20ao%20vídeo-YouTube-red?style=for-the-badge&logo=youtube)](https://youtu.be/Ej1I5ugwAGk)
 
 ---
 
